@@ -438,7 +438,7 @@
                     <div class="btn-text">Search Services</div>
                     <div class="btn-desc">Find the right service for your vehicle</div>
                 </div>
-                <div class="action-btn book-btn" onclick="location.href='BookAppointmentView.jsp'">
+                <div class="action-btn book-btn" onclick="location.href='<%= request.getContextPath() %>/customer/BookAppointmentView.jsp'">
                     <i class="fas fa-calendar-plus btn-icon"></i>
                     <div class="btn-text">Book Appointment</div>
                     <div class="btn-desc">Schedule your vehicle service</div>

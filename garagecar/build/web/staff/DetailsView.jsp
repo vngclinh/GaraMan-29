@@ -467,8 +467,8 @@
             <h1>GaraMan</h1>
         </div>
         <ul>
-            <li><a href="ManagerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="SelectStatsView.jsp"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="<%= request.getContextPath() %>/staff/ManagerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="<%= request.getContextPath() %>/staff/SelectStatsView.jsp"><i class="fas fa-chart-line"></i> View statistics</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-users"></i> Staff</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-cogs"></i> Settings</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>

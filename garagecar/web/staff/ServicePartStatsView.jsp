@@ -595,8 +595,8 @@
             <h1>GaraMan</h1>
         </div>
         <ul>
-            <li><a href="ManagerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="SelectStatsView.jsp"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="<%= request.getContextPath() %>/staff/ManagerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="<%= request.getContextPath() %>/staff/SelectStatsView.jsp"><i class="fas fa-chart-line"></i> View statistics</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-users"></i> Staff</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-cogs"></i> Settings</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
@@ -616,7 +616,7 @@
             </div>
 
             <!-- Compact Filter Form -->
-            <form method="get" action="CombinedStatsController" class="filter-form">
+            <form method="get" action="<%= request.getContextPath() %>/CombinedStatsController" class="filter-form">
                 <div class="form-group">
                     <label for="startDate"><i class="fas fa-calendar-alt"></i> Start Date</label>
                     <input type="date" id="startDate" name="startDate" required value="<%= request.getParameter("startDate") != null ? request.getParameter("startDate") : "" %>">
@@ -750,7 +750,7 @@
 
             <!-- Compact Back Button -->
             <div class="btn-container">
-                <button class="back-btn" onclick="window.location.href='SelectStatsView.jsp'">
+                <button class="back-btn" onclick="window.location.href='<%= request.getContextPath() %>/staff/SelectStatsView.jsp'">
                     <i class="fas fa-arrow-left"></i> Back to Statistics
                 </button>
             </div>

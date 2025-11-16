@@ -26,7 +26,7 @@ public class InvoiceController extends HttpServlet {
                 Invoice invoice = dao.getInvoiceDetail(invoiceId);
 
                 request.setAttribute("invoice", invoice);
-                request.getRequestDispatcher("DetailsInvoiceView.jsp").forward(request, response);
+                request.getRequestDispatcher("/staff/DetailsInvoiceView.jsp").forward(request, response);
                 return;
 
             } catch (Exception e) {
@@ -63,7 +63,6 @@ public class InvoiceController extends HttpServlet {
                 }
             }
 
-            // 🔹 Truyền dữ liệu sang JSP
             request.setAttribute("invoiceList", invoices);
             request.setAttribute("itemMap", itemMap);
             request.setAttribute("itemName", name);
@@ -71,7 +70,7 @@ public class InvoiceController extends HttpServlet {
             request.setAttribute("start", start);
             request.setAttribute("end", end);
 
-            RequestDispatcher rd = request.getRequestDispatcher("DetailsView.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/staff/DetailsView.jsp");
             rd.forward(request, response);
 
         } catch (Exception e) {

@@ -433,7 +433,7 @@
             </div>
 
             <div class="action-buttons">
-                <a href="SelectStatsView.jsp" class="action-btn stats-btn">
+                <a href="<%= request.getContextPath() %>/staff/SelectStatsView.jsp" class="action-btn stats-btn">
                     <i class="fas fa-chart-bar btn-icon"></i>
                     <div class="btn-text">View Statistics</div>
                     <div class="btn-desc">Analyze business performance and reports</div>

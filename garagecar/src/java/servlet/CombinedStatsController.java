@@ -46,13 +46,13 @@ public class CombinedStatsController extends HttpServlet {
                 request.setAttribute("partStats", partstats);
             }
 
-            RequestDispatcher rd = request.getRequestDispatcher("ServicePartStatsView.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/staff/ServicePartStatsView.jsp");
             rd.forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error loading statistics: " + e.getMessage());
-            request.getRequestDispatcher("ServicePartStatsView.jsp").forward(request, response);
+            request.getRequestDispatcher("/staff/ServicePartStatsView.jsp").forward(request, response);
         }
     }
 

@@ -372,7 +372,7 @@
             <h1>GaraMan</h1>
         </div>
         <ul>
-            <li><a href="ManagerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="<%= request.getContextPath() %>/staff/ManagerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="#" class="active"><i class="fas fa-chart-line"></i> Analytics</a></li>
             <li><a href="#" onclick="showUnderConstruction(event)"><i class="fas fa-users"></i> Staff</a></li>
             <li><a href="#" onclick="showUnderConstruction(event)"><i class="fas fa-cogs"></i> Settings</a></li>
@@ -392,7 +392,7 @@
             </div>
 
             <div class="stats-options">
-                <a href="ServicePartStatsView.jsp" class="stats-option option-active">
+                <a href="<%= request.getContextPath() %>/staff/ServicePartStatsView.jsp" class="stats-option option-active">
                     <div class="option-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
@@ -436,7 +436,7 @@
             </div>
 
             <div class="btn-container">
-                <button class="back-btn" onclick="window.location.href='ManagerHomepage.jsp'">
+                <button class="back-btn" onclick="window.location.href='<%= request.getContextPath() %>/staff/ManagerHomepage.jsp'">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </button>
             </div>

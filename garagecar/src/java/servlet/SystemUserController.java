@@ -35,11 +35,9 @@ public class SystemUserController extends HttpServlet {
                     Employee emp = (Employee) user;
                     String position = emp.getPosition();
                     if (position != null && position.equalsIgnoreCase("managementstaff")) {
-                        response.sendRedirect("ManagerHomepage.jsp");
-                    } 
+                        request.getRequestDispatcher("/staff/ManagerHomepage.jsp").forward(request, response);                    } 
                 } else if (user instanceof Customer) {
-                    response.sendRedirect("CustomerHomepage.jsp");
-                }
+                    request.getRequestDispatcher("/customer/CustomerHomepage.jsp").forward(request, response);                }
                 return; 
 
             } else {
@@ -50,11 +48,11 @@ public class SystemUserController extends HttpServlet {
             e.printStackTrace();
         }
         request.setAttribute("errorMessage", errorMessage);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
         dispatcher.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("Login.jsp");
     }
 }

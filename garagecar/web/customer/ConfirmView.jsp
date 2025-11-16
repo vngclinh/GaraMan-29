@@ -1,10 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="model.Customer" %>
+<%
+    // Lấy thông tin từ session và form trước đó
+    Customer customer = (Customer) session.getAttribute("user");
+    String name = (customer != null) ? customer.getFullname() : "Guest";
+    String phone = (customer != null) ? customer.getPhoneNum() : "";
+
+    String date = request.getParameter("date");
+    String timeslot = request.getParameter("timeslot");
+    String note = request.getParameter("note");
+
+    String appointmentTime = "";
+    if (date != null && timeslot != null) {
+        appointmentTime = date.trim() + " " + timeslot.trim();
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment - GaraMan</title>
+    <title>Appointment Confirmation - GaraMan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -117,7 +133,7 @@
             padding: 120px 20px 80px;
         }
 
-        .appointment-container {
+        .confirmation-container {
             background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 16px;
@@ -131,7 +147,7 @@
             animation: fadeInUp 0.8s ease forwards;
         }
 
-        .appointment-container::before {
+        .confirmation-container::before {
             content: "";
             position: absolute;
             top: 0;
@@ -141,12 +157,12 @@
             background: linear-gradient(to right, #3498db, #2ecc71);
         }
 
-        .appointment-header {
+        .confirmation-header {
             text-align: center;
             margin-bottom: 30px;
         }
 
-        .appointment-icon {
+        .confirmation-icon {
             font-size: 50px;
             color: #3498db;
             margin-bottom: 15px;
@@ -158,7 +174,7 @@
             font-size: 32px;
         }
 
-        .appointment-subtitle {
+        .confirmation-subtitle {
             color: #7f8c8d;
             font-size: 16px;
             margin-bottom: 5px;
@@ -198,7 +214,7 @@
             z-index: 1;
         }
 
-        input[type="date"], select, textarea {
+        input[type="text"], textarea {
             display: block;
             width: 100%;
             padding: 12px 12px 12px 45px;
@@ -207,13 +223,15 @@
             font-size: 15px;
             outline: none;
             transition: all 0.3s;
-            background: white;
+            background: #f9f9f9;
             box-sizing: border-box;
+            color: #2c3e50;
         }
 
-        input[type="date"]:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        input[readonly], textarea[readonly] {
+            background: #f5f5f5;
+            color: #7f8c8d;
+            cursor: not-allowed;
         }
 
         textarea {
@@ -222,14 +240,32 @@
             padding-left: 15px;
         }
 
+        .note-warning {
+            color: #e74c3c;
+            font-size: 13px;
+            text-align: center;
+            margin: 15px 0 25px;
+            padding: 12px;
+            background: #ffeaea;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        .note-warning i {
+            margin-right: 5px;
+        }
+
         .btn-container {
             display: flex;
             justify-content: space-between;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 20px;
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 0.8s ease 0.6s forwards;
+            animation: fadeInUp 0.8s ease 0.7s forwards;
         }
 
         .btn {
@@ -247,23 +283,23 @@
             gap: 8px;
         }
 
-        .back-btn {
+        .btn-cancel {
             background: #95a5a6;
             color: white;
         }
 
-        .back-btn:hover {
+        .btn-cancel:hover {
             background: #7f8c8d;
             transform: translateY(-2px);
         }
 
-        .next-btn {
+        .btn-confirm {
             background: linear-gradient(to right, #3498db, #2ecc71);
             color: white;
             box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
 
-        .next-btn:hover {
+        .btn-confirm:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
@@ -301,7 +337,7 @@
                 padding: 150px 15px 60px;
             }
             
-            .appointment-container {
+            .confirmation-container {
                 padding: 30px 25px;
             }
             
@@ -311,7 +347,7 @@
         }
 
         @media (max-width: 480px) {
-            .appointment-container {
+            .confirmation-container {
                 padding: 25px 20px;
             }
             
@@ -332,70 +368,32 @@
             }
         });
 
-        // Timeslot functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateInput = document.getElementById("date");
-            const timeslotSelect = document.getElementById("timeslot");
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
 
-            // Danh sách timeslot cố định trong ngày
-            const allTimeslots = [
-                "08:00 - 09:00",
-                "09:00 - 10:00",
-                "10:00 - 11:00",
-                "11:00 - 12:00",
-                "13:00 - 14:00",
-                "14:00 - 15:00",
-                "15:00 - 16:00",
-                "16:00 - 17:00",
-                "17:00 - 18:00",
-                "18:00 - 19:00",
-                "19:00 - 20:00"
-            ];
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
 
-            const today = new Date().toISOString().split("T")[0];
-            dateInput.min = today;
+                const formData = new FormData(form);
 
-            dateInput.addEventListener("change", () => {
-                const selectedDate = dateInput.value;
-                timeslotSelect.innerHTML = "";
-
-                if (!selectedDate) {
-                    timeslotSelect.innerHTML = "<option value=''>-- Please choose a date first --</option>";
-                    return;
+                for (const [k, v] of formData.entries()) {
+                    console.log(k, "=", v);
                 }
 
-                // Lấy giờ hiện tại (nếu ngày chọn là hôm nay)
-                const now = new Date();
-                const currentHour = now.getHours();
-                const currentMinute = now.getMinutes();
+                const contextPath = "<%= request.getContextPath() %>";
+                const response = await fetch(contextPath + "/AppointmentController", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams([...formData])
+                });
 
-                // Nếu người dùng chọn hôm nay => chỉ hiện slot sau giờ hiện tại
-                let availableSlots = allTimeslots;
-                const isToday = selectedDate === today;
-                if (isToday) {
-                    availableSlots = allTimeslots.filter(slot => {
-                        const startHour = parseInt(slot.split(":")[0]);
-                        // Nếu là giờ hiện tại nhưng phút > 30 => bỏ luôn slot đó
-                        return startHour > currentHour || (startHour === currentHour && currentMinute < 30);
-                    });
-                }
+                const result = await response.json();
 
-                if (availableSlots.length === 0) {
-                    timeslotSelect.innerHTML = "<option>No available timeslots for today</option>";
+                if (result.status === "success") {
+                    alert("✅ " + result.message);
+                    window.location.href = "<%= request.getContextPath() %>/customer/CustomerHomepage.jsp";
                 } else {
-                    for (const slot of availableSlots) {
-                        const option = document.createElement("option");
-                        option.value = slot;
-                        option.textContent = slot;
-                        timeslotSelect.appendChild(option);
-                    }
-                }
-            });
-
-            timeslotSelect.addEventListener("focus", () => {
-                if (!dateInput.value) {
-                    alert("Please select a date first.");
-                    dateInput.focus();
+                    alert(result.message);
                 }
             });
         });
@@ -410,9 +408,9 @@
             <h1>GaraMan</h1>
         </div>
         <ul>
-            <li><a href="CustomerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="<%= request.getContextPath() %>/customer/CustomerHomepage.jsp"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-tools"></i> Services</a></li>
-            <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-calendar-check"></i> Book Appointment</a></li>
+            <li><a href="<%= request.getContextPath() %>/customer/BookAppointmentView.jsp"><i class="fas fa-calendar-check"></i> Book Appointment</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-history"></i> History</a></li>
             <li><a href="#" onclick="alert('🚧 This function is under construction 🚧')"><i class="fas fa-phone"></i> Contact</a></li>
         </ul>
@@ -420,45 +418,56 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="appointment-container">
-            <div class="appointment-header">
-                <div class="appointment-icon">
-                    <i class="fas fa-calendar-plus"></i>
+        <div class="confirmation-container">
+            <div class="confirmation-header">
+                <div class="confirmation-icon">
+                    <i class="fas fa-clipboard-check"></i>
                 </div>
-                <h2>Book Appointment</h2>
-                <p class="appointment-subtitle">Schedule your vehicle service with us</p>
+                <h2>Appointment Confirmation</h2>
+                <p class="confirmation-subtitle">Please review your appointment details</p>
             </div>
 
-            <form action="ConfirmView.jsp" method="POST">
+            <form action="AppointmentController" method="POST">
                 <div class="form-group">
-                    <label for="date">Select Date</label>
+                    <label for="customerName">Customer Name</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                        <input type="date" id="date" name="date" required>
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="customerName" name="customerName" value="<%= name %>" readonly>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="timeslot">Select Timeslot</label>
+                    <label for="phone">Phone Number</label>
                     <div class="input-with-icon">
-                        <i class="fas fa-clock"></i>
-                        <select id="timeslot" name="timeslot" required>
-                            <option value="">-- Please choose a date first --</option>
-                        </select>
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="phone" name="phone" value="<%= phone %>" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointmentTime">Appointment Time</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="text" id="appointmentTime" name="appointmentTime" value="<%= appointmentTime %>" readonly>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="note">Additional Notes</label>
-                    <textarea id="note" name="note" placeholder="Enter any special requests or details about your vehicle..."></textarea>
+                    <textarea id="note" name="note" readonly><%= (note != null ? note : "") %></textarea>
+                </div>
+
+                <div class="note-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Arrive within the timeslot you selected, otherwise the appointment will be canceled.
                 </div>
 
                 <div class="btn-container">
-                    <button type="button" class="btn back-btn" onclick="window.location.href='CustomerHomepage.jsp'">
-                        <i class="fas fa-arrow-left"></i> Go Back
+                    <button type="button" class="btn btn-cancel" onclick="window.location.href='<%= request.getContextPath() %>/customer/BookAppointmentView.jsp'">
+                        <i class="fas fa-arrow-left"></i> Cancel
                     </button>
-                    <button type="submit" class="btn next-btn">
-                        Next <i class="fas fa-arrow-right"></i>
+                    <button type="submit" class="btn btn-confirm">
+                        <i class="fas fa-check"></i> Confirm Appointment
                     </button>
                 </div>
             </form>
