@@ -1,6 +1,6 @@
 package servlet;
 
-import dao1.SystemUserDAO;
+import dao.SystemUserDAO;
 import model.SystemUser;
 import model.Employee;
 import model.Customer;

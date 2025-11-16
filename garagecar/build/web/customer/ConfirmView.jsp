@@ -1,18 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="model.Customer" %>
+<%@ page import="model.Appointment" %>
 <%
-    // Lấy thông tin từ session và form trước đó
     Customer customer = (Customer) session.getAttribute("user");
+    Appointment apm = (Appointment) session.getAttribute("appointment");
+
     String name = (customer != null) ? customer.getFullname() : "Guest";
     String phone = (customer != null) ? customer.getPhoneNum() : "";
 
-    String date = request.getParameter("date");
-    String timeslot = request.getParameter("timeslot");
-    String note = request.getParameter("note");
-
     String appointmentTime = "";
-    if (date != null && timeslot != null) {
-        appointmentTime = date.trim() + " " + timeslot.trim();
+    String note = "";
+
+    if (apm != null) {
+        java.time.LocalDateTime dt = apm.getAppointmentTime();
+        if (dt != null) {
+            appointmentTime = dt.toLocalDate() + " " + dt.toLocalTime();
+        }
+        note = apm.getNote() != null ? apm.getNote() : "";
     }
 %>
 <!DOCTYPE html>

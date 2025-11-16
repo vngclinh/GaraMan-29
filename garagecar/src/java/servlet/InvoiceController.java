@@ -1,6 +1,6 @@
 package servlet;
 
-import dao1.InvoiceDAO;
+import dao.InvoiceDAO;
 import model.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

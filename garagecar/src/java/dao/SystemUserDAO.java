@@ -1,4 +1,4 @@
-package dao1; 
+package dao; 
 import model.SystemUser;
 import model.Customer;
 import model.Employee;

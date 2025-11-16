@@ -1,4 +1,40 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="model.Customer" %>
+<%@ page import="model.Appointment" %>
+<%
+    // ---------------------- HANDLE FORM SUBMIT ------------------------
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+
+        String date = request.getParameter("date");
+        String timeslot = request.getParameter("timeslot");
+        String note = request.getParameter("note");
+
+        if (date != null && timeslot != null) {
+
+            Customer customer = (Customer) session.getAttribute("user");
+
+            // Tạo Appointment object
+            Appointment apm = new Appointment();
+            apm.setCustomer(customer);
+            apm.setStatus("pending");
+
+            // Tách giờ bắt đầu
+            String startTime = timeslot.split("-")[0].trim();
+            java.time.LocalDate d = java.time.LocalDate.parse(date);
+            java.time.LocalTime t = java.time.LocalTime.parse(startTime);
+
+            apm.setAppointmentTime(java.time.LocalDateTime.of(d, t));
+            apm.setNote(note);
+
+            // Lưu vào session
+            session.setAttribute("appointment", apm);
+
+            // Redirect sang trang Confirm
+            response.sendRedirect("ConfirmView.jsp");
+            return; 
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -428,7 +464,7 @@
                 <p class="appointment-subtitle">Schedule your vehicle service with us</p>
             </div>
 
-            <form action="<%= request.getContextPath() %>/customer/ConfirmView.jsp" method="POST">
+            <form action="BookAppointmentView.jsp" method="POST">
                 <div class="form-group">
                     <label for="date">Select Date</label>
                     <div class="input-with-icon">

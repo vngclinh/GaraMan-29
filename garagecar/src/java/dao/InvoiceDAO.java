@@ -1,4 +1,4 @@
-package dao1;
+package dao;
 
 import model.*;
 import java.sql.*;
